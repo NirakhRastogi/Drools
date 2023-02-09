@@ -1,0 +1,87 @@
+import com.drools.DroolsITRCalculator.models.Tax;
+import com.drools.DroolsITRCalculator.util.LoggerUtil;
+
+global java.lang.Double taxExceptionAmount;
+
+/*-------------> 15 Lakhs------------------------------------------------------------------------------------------------------*/
+rule "MoreThanFifteenLakhs" salience 8
+    when
+        tax: Tax(pendingIncome > 1500000);
+    then
+        tax.addTax((tax.getPendingIncome() - 1500000)*.30);
+        tax.setPendingIncome(1500000);
+        LoggerUtil.logValue(tax+">>30%");
+end
+
+/*-------------> 12 Lakhs------------------------------------------------------------------------------------------------------*/
+rule "MoreThanTwelveLakhs" salience 7
+    when
+        tax: Tax(pendingIncome > 1200000);
+    then
+        tax.addTax((tax.getPendingIncome() - 1200000)*.20);
+        tax.setPendingIncome(1200000);
+        LoggerUtil.logValue(tax+">>20%");
+
+end
+
+/*-------------> 9 Lakhs------------------------------------------------------------------------------------------------------*/
+rule "MoreThanNineLakhs" salience 6
+    when
+        tax: Tax(pendingIncome > 900000);
+    then
+        tax.addTax((tax.getPendingIncome() - 900000)*.15);
+        tax.setPendingIncome(900000);
+        LoggerUtil.logValue(tax+">>15%");
+end
+
+/*------------->Actionvation Group 1 + > 6 Lakhs------------------------------------------------------------------------------------------------------*/
+rule "TotalIncomeLessThanSevenLakhs" salience 5
+activation-group "TaxRunnerSixLakhs"
+    when
+        tax: Tax(totalIncome <= taxExceptionAmount);
+    then
+        tax.setPendingIncome(0);
+        tax.addTax(0);
+        LoggerUtil.logValue("income less than "+taxExceptionAmount+" limit>>"+tax);
+end
+
+rule "MoreThanSixLakhs" salience 4
+activation-group "TaxRunnerSixLakhs"
+    when
+        tax: Tax(pendingIncome > 600000);
+    then
+        tax.addTax((tax.getPendingIncome() - 600000)*.10);
+        tax.setPendingIncome(600000);
+        LoggerUtil.logValue(tax+">>10%");
+end
+
+/*------------->Actionvation Group 2 + > 3 Lakhs------------------------------------------------------------------------------------------------------*/
+rule "TotalIncomeLessThanSevenLakhs2" salience 3
+activation-group "TaxRunnerThreeLakhs"
+    when
+        tax: Tax(totalIncome <= taxExceptionAmount);
+    then
+        tax.setPendingIncome(0);
+        tax.addTax(0);
+        LoggerUtil.logValue("income less than "+taxExceptionAmount+" limit>>"+tax);
+end
+
+rule "MoreThanThreeLakhs" salience 2
+activation-group "TaxRunnerThreeLakhs"
+    when
+        tax: Tax(pendingIncome > 300000);
+    then
+        tax.addTax((tax.getPendingIncome() - 300000)*.05);
+        tax.setPendingIncome(300000);
+        LoggerUtil.logValue(tax+">>5%");
+end
+
+/*-------------<= 3 Lakhs------------------------------------------------------------------------------------------------------*/
+rule "LessThanThreeLakhs" salience 1
+    when
+        tax: Tax(pendingIncome <= 300000);
+    then
+        tax.addTax(0);
+        tax.setPendingIncome(0);
+        LoggerUtil.logValue(tax+">>0%");
+end
