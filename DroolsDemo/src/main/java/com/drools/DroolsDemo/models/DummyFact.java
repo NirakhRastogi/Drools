@@ -10,7 +10,7 @@ import org.drools.models.ConditionClock;
 @NoArgsConstructor
 @Data
 @ToString
-public class Order {
+public class DummyFact {
 
     private int id;
     private double amount;

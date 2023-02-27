@@ -42,11 +42,32 @@
             <artifactId>drools-compiler</artifactId>
             <version>7.59.0.Final</version>
         </dependency>
-        <dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.12</version>
+		</dependency>
+		<dependency>
             <groupId>org.drools</groupId>
             <artifactId>drools-mvel</artifactId>
             <version>7.59.0.Final</version>
         </dependency>
+        <dependency>
+			<groupId>org.droolsassert</groupId>
+			<artifactId>da-utils</artifactId>
+			<version>3.0.10</version>
+		</dependency>
+		<dependency>
+			<groupId>org.droolsassert</groupId>
+			<artifactId>droolsassert</artifactId>
+			<version>3.0.10</version>
+		</dependency>
+		<dependency>
+			<groupId>org.drools</groupId>
+			<artifactId>DRLFileUpdaterPlugin</artifactId>
+			<version>1.36-SNAPSHOT</version>
+		</dependency>
+
     </dependencies>
 
 	<build>
@@ -62,6 +83,40 @@
 						</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.drools</groupId>
+				<artifactId>DRLFileUpdaterPlugin</artifactId>
+				<version>1.36-SNAPSHOT</version>
+				<configuration>
+					<clockName>clock</clockName>
+					<droolsWorkbooks>
+						<droolsWorkbook>
+							<infile>F:\Projects\Drools\DroolsDemo\src\main\resources\order.drl</infile>
+							<outfile>F:\Projects\Drools\DroolsDemo\src\main\resources\order_copy.drl</outfile>
+							<facts>
+								<fact>Order</fact>
+								<fact>DummyFact</fact>
+							</facts>
+						</droolsWorkbook>
+						<droolsWorkbook>
+							<infile>F:\Projects\Drools\DroolsDemo\src\main\resources\order.drl</infile>
+							<outfile>F:\Projects\Drools\DroolsDemo\src\test\resources\order_copy.drl</outfile>
+							<facts>
+								<fact>Order</fact>
+								<fact>DummyFact</fact>
+							</facts>
+						</droolsWorkbook>
+					</droolsWorkbooks>
+
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>drlFileUpdaterWorkflow</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

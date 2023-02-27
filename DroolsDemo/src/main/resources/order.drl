@@ -1,4 +1,5 @@
 import com.drools.DroolsDemo.models.Order;
+import com.drools.DroolsDemo.models.DummyFact;
 import com.drools.DroolsDemo.utils.LoggerUtil;
 import com.drools.DroolsDemo.models.Status;
 
@@ -6,7 +7,8 @@ global java.lang.Integer minimumOrderPurchaseValue;
 
 rule "MiniOrder"
     when
-        $order: Order(amount < 5);
+        $order: Order(LoggerUtil.wait(1000) && amount < 5);
+        $dummyFact: DummyFact();
     then
         $order.setTax(10.2);
         $order.calculateTotalAmount();
@@ -27,6 +29,7 @@ end
 rule "MaxOrder"
     when
         order: Order(amount > 10);
+        $dummyFact: DummyFact();
     then
         order.setTax(20.3);
         order.calculateTotalAmount();
@@ -34,7 +37,8 @@ rule "MaxOrder"
         LoggerUtil.logValue("Updated order value is, " + order.toString());
 end
 
-rule "SuperOrder" salience -20
+rule "SuperOrder"
+salience -20
     when
         /*This is an and condition*/
         order: Order(amount > 100);

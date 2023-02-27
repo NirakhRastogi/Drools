@@ -1,5 +1,6 @@
 package com.drools.DroolsDemo.config;
 
+import org.drools.listeners.PerformanceMonitoringListener;
 import org.kie.api.KieServices;
 import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
@@ -12,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class KieSessionConfig {
 
-    private static final String RULES_CUSTOMER_RULES_DRL = "order.drl";
+    private static final String RULES_CUSTOMER_RULES_DRL = "order_copy.drl";
     private static final KieServices kieServices = KieServices.Factory.get();
 
     @Bean
@@ -22,8 +23,7 @@ public class KieSessionConfig {
         KieBuilder kb = kieServices.newKieBuilder(kieFileSystem);
         kb.buildAll();
         KieModule kieModule = kb.getKieModule();
-        KieContainer kieContainer = kieServices.newKieContainer(kieModule.getReleaseId());
-        return kieContainer;
+        return kieServices.newKieContainer(kieModule.getReleaseId());
     }
 
 }

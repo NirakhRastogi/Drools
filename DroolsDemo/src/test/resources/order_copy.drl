@@ -1,0 +1,99 @@
+//********* Code inserted by DRLFileUpdaterPlugin ******//
+global org.drools.models.TimedFact clock
+//********************************************************************//
+
+import com.drools.DroolsDemo.models.Order;
+import com.drools.DroolsDemo.models.DummyFact;
+import com.drools.DroolsDemo.utils.LoggerUtil;
+import com.drools.DroolsDemo.models.Status;
+
+global java.lang.Integer minimumOrderPurchaseValue;
+
+rule "MiniOrder"
+    when
+		//********* Code inserted by DRLFileUpdaterPlugin ******//
+		Order(org.drools.utils.RuleUtil.timedInput("MiniOrder","Order",clock));
+		DummyFact(org.drools.utils.RuleUtil.timedInput("MiniOrder","DummyFact",clock));
+		//********************************************************************//
+
+        $order: Order(LoggerUtil.wait(1000) && amount < 5);
+        $dummyFact: DummyFact();
+
+		//********* Code inserted by DRLFileUpdaterPlugin ******//
+		Order(org.drools.utils.RuleUtil.timedExit("MiniOrder","Order",clock));
+		DummyFact(org.drools.utils.RuleUtil.timedExit("MiniOrder","DummyFact",clock));
+		//********************************************************************//
+
+    then
+        $order.setTax(10.2);
+        $order.calculateTotalAmount();
+        $order.modifyOrderStatus(minimumOrderPurchaseValue, $order.getTotalAmount());
+        LoggerUtil.logValue($order);
+end
+
+rule "MediumOrder"
+    when
+		//********* Code inserted by DRLFileUpdaterPlugin ******//
+		Order(org.drools.utils.RuleUtil.timedInput("MediumOrder","Order",clock));
+		DummyFact(org.drools.utils.RuleUtil.timedInput("MediumOrder","DummyFact",clock));
+		//********************************************************************//
+
+        order: Order(amount >= 5 && amount <= 10);
+
+		//********* Code inserted by DRLFileUpdaterPlugin ******//
+		Order(org.drools.utils.RuleUtil.timedExit("MediumOrder","Order",clock));
+		DummyFact(org.drools.utils.RuleUtil.timedExit("MediumOrder","DummyFact",clock));
+		//********************************************************************//
+
+    then
+        order.setTax(15.1);
+        order.calculateTotalAmount();
+        order.modifyOrderStatus(minimumOrderPurchaseValue, order.getTotalAmount());
+        LoggerUtil.logValue(order);
+end
+
+rule "MaxOrder"
+    when
+		//********* Code inserted by DRLFileUpdaterPlugin ******//
+		Order(org.drools.utils.RuleUtil.timedInput("MaxOrder","Order",clock));
+		DummyFact(org.drools.utils.RuleUtil.timedInput("MaxOrder","DummyFact",clock));
+		//********************************************************************//
+
+        order: Order(amount > 10);
+        $dummyFact: DummyFact();
+
+		//********* Code inserted by DRLFileUpdaterPlugin ******//
+		Order(org.drools.utils.RuleUtil.timedExit("MaxOrder","Order",clock));
+		DummyFact(org.drools.utils.RuleUtil.timedExit("MaxOrder","DummyFact",clock));
+		//********************************************************************//
+
+    then
+        order.setTax(20.3);
+        order.calculateTotalAmount();
+        order.modifyOrderStatus(minimumOrderPurchaseValue, order.getTotalAmount());
+        LoggerUtil.logValue("Updated order value is, " + order.toString());
+end
+
+rule "SuperOrder"
+salience -20
+    when
+		//********* Code inserted by DRLFileUpdaterPlugin ******//
+		Order(org.drools.utils.RuleUtil.timedInput("SuperOrder","Order",clock));
+		DummyFact(org.drools.utils.RuleUtil.timedInput("SuperOrder","DummyFact",clock));
+		//********************************************************************//
+
+        /*This is an and condition*/
+        order: Order(amount > 100);
+        Order(id%2 == 0);
+
+		//********* Code inserted by DRLFileUpdaterPlugin ******//
+		Order(org.drools.utils.RuleUtil.timedExit("SuperOrder","Order",clock));
+		DummyFact(org.drools.utils.RuleUtil.timedExit("SuperOrder","DummyFact",clock));
+		//********************************************************************//
+
+    then
+        order.setTax(28.3);
+        order.calculateTotalAmount();
+        order.modifyOrderStatus(minimumOrderPurchaseValue, order.getTotalAmount());
+        LoggerUtil.logValue("Updated order value is, " + order.toString());
+end
